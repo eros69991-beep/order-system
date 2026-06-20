@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手机点单系统</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f6f6;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .card {
+            background: white;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 14px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            background: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .order {
+            background: white;
+            padding: 14px;
+            border-radius: 14px;
+            margin-top: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        .total {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .btn-clear {
+            width: 100%;
+            margin-top: 10px;
+            background: #333;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            margin-top: 10px;
+            background: #52c41a;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🍔 手机点单系统</h1>
+
+    <!-- 菜单 -->
+    <div class="card">
+        <div>汉堡 - 15元</div>
+        <button onclick="addItem('汉堡')">+ 加入</button>
+    </div>
+
+    <div class="card">
+        <div>薯条 - 10元</div>
+        <button onclick="addItem('薯条')">+ 加入</button>
+    </div>
+
+    <div class="card">
+        <div>可乐 - 8元</div>
+        <button onclick="addItem('可乐')">+ 加入</button>
+    </div>
+
+    <!-- 订单 -->
+    <div class="order">
+        <h2>当前订单</h2>
+
+        <div id="order">还没有点餐</div>
+
+        <button class="btn-checkout" onclick="checkout()">结算下单</button>
+        <button class="btn-clear" onclick="clearOrder()">清空订单</button>
+    </div>
+
+</div>
+
+<script>
+    let order = [];
+
+    let prices = {
+        "汉堡": 15,
+        "薯条": 10,
+        "可乐": 8
+    };
+
+    function addItem(name) {
+        order.push(name);
+        render();
+    }
+
+    function clearOrder() {
+        order = [];
+        render();
+    }
+
+    function checkout() {
+        if (order.length === 0) {
+            alert("还没有点餐哦");
+            return;
+        }
+
+        let total = 0;
+
+        order.forEach(item => {
+            total += prices[item];
+        });
+
+        alert("下单成功！总金额：" + total + " 元");
+
+        order = [];
+        render();
+    }
+
+    function render() {
+        if (order.length === 0) {
+            document.getElementById("order").innerHTML = "还没有点餐";
+            return;
+        }
+
+        let count = {};
+        let total = 0;
+
+        order.forEach(item => {
+            count[item] = (count[item] || 0) + 1;
+            total += prices[item];
+        });
+
+        let html = "";
+
+        for (let key in count) {
+            html += `
+                <div class="order-item">
+                    <span>${key} x${count[key]}</span>
+                    <span>${count[key] * prices[key]}元</span>
+                </div>
+            `;
+        }
+
+        html += `<div class="total">总价：${total} 元</div>`;
+
+        document.getElementById("order").innerHTML = html;
+    }
+</script>
+
+</body>
+</html>
